@@ -160,8 +160,6 @@ docker run --gpus device=0 --rm \
 ### Step 7: Hierarchical ASPECT Pipeline
 A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five).
 
-## Quick Start
-
 ```bash
 # Run full pipeline with custom data
 python run_all_tests.py /path/to/your/data.csv
@@ -190,7 +188,7 @@ Results saved in: `./test_result_{dataset_name}_{timestamp}/`
 - `result_three_class/predictions_with_probabilities.csv` - Three-class predictions
 - `result_binary_class/predictions_with_probabilities.csv` - Final hierarchical predictions
 
-#####Visualization
+##### Visualization
 
 ```bash
 python plot_cascaded_results.py --input-dir ./test_result_{dataset_name}_{timestamp}
