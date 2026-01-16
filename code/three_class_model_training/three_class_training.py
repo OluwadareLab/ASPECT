@@ -1,6 +1,6 @@
 import os
 import sys
-# Set environment variables BEFORE any other imports to disable Flash Attention
+
 os.environ["USE_FLASH_ATTENTION"] = "0"
 os.environ["DISABLE_FLASH_ATTENTION"] = "1"
 os.environ["USE_FLASH_ATTENTION_2"] = "0"
@@ -10,14 +10,13 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import torch
 _original_torch_load = torch.load
 def _patched_torch_load(*args, **kwargs):
-    # If weights_only is not explicitly set, default to False for checkpoint compatibility
+    
     if 'weights_only' not in kwargs:
         kwargs['weights_only'] = False
     return _original_torch_load(*args, **kwargs)
 torch.load = _patched_torch_load
 
-# Block flash_attn import by creating a stub module in sys.modules
-# This prevents the actual flash_attn module from being imported
+
 class FlashAttnStub:
     """Stub class to replace flash_attn functions"""
     def __call__(self, *args, **kwargs):
@@ -25,8 +24,6 @@ class FlashAttnStub:
     def __getattr__(self, name):
         return FlashAttnStub()
 
-# Create stub modules to prevent flash_attn from being imported
-# This must happen BEFORE any model code tries to import flash_attn
 _stub_module = type(sys)('flash_attn')
 _stub_module.flash_attn_func = FlashAttnStub()
 _stub_module.flash_attn_qkvpacked_func = FlashAttnStub()
@@ -38,7 +35,7 @@ _stub_triton.cdiv = lambda x, y: (x + y - 1) // y
 sys.modules['flash_attn'] = _stub_module
 sys.modules['flash_attn.flash_attn_triton'] = _stub_module
 sys.modules['flash_attn.flash_attn_interface'] = _stub_module
-# Also stub out any potential triton imports from flash_attn
+
 try:
     import triton
     pass
