@@ -117,7 +117,6 @@ def preprocess_test_data(dataframe, tokenizer, max_length=1024, has_labels=True)
     
     if has_labels:
         labels = dataframe["label"].tolist()
-        # Map string labels to numeric values (alphabetical order: alt_five=0, alt_three=1, cassette=2)
         label_mapping = {
             "alt_five": 0,
             "alt_three": 1,
