@@ -160,6 +160,11 @@ docker run --gpus device=0 --rm \
 ### Step 7: Hierarchical ASPECT Pipeline
 A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five).
 
+#### Docker
+```bash
+docker run --rm --gpus all -v $(pwd):/app -w /app/three_class_pipeline aspect-gpu python run_all_tests.py /path/to/your/data.csv
+```
+
 ```bash
 # Run full pipeline with custom data
 python run_all_tests.py /path/to/your/data.csv
