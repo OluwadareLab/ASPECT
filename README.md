@@ -17,8 +17,8 @@ ___________________
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/OluwadareLab/SpliceRead.git
-cd Aspect
+git clone https://github.com/OluwadareLab/ASPECT.git
+cd ASPECT
 ```
 
 ### Step 2: Download Data and Models
@@ -29,14 +29,14 @@ Download the Zenodo archive from the link below:
 
 ### Step 3: Place Files
 
-* Extract the `SpliceRead_Files.zip` archive.
+* Extract the `ASPECT.zip` archive.
 * Replace the `data/` folder in the repo with the extracted `data/` folder.
 * Replace the `models/` folder in the repo with the extracted `models/` folder.
 
 ### Step 4: Build Docker Image
 
 ```bash
-docker build -t spliceread .
+docker build -t aspect-gpu .
 ```
 This will:
 - Use NVIDIA CUDA 12.4.0 base image
