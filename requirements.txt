@@ -1,0 +1,16 @@
+einops==0.6.1
+transformers==4.29.2
+peft==0.3.0
+omegaconf==2.3.0
+evaluate==0.4.0
+accelerate==0.20.3
+scikit-learn==1.2.2
+numpy==1.24.4
+wandb
+imbalanced-learn
+matplotlib
+seaborn
+pandas
+tensorflow
+optuna
+Triton >= 2.2.0
