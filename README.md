@@ -84,6 +84,42 @@ This will:
 **Stop training:** `./run_training_docker.sh stop`
 
 
+#### Testing Three-Class Model
+**From project root** (where `binary_model_training/` exists):
+```bash
+docker run --rm --gpus device=<gpu_id> \
+  -v $(pwd):/app \
+  -w /app/binary_model_training \
+  aspect-gpu \
+  python3 test_model.py \
+    --model_path <model_path> \
+    --test_data_path <test_data_path> \
+    --output_dir <output_dir> \
+    --batch_size <batch_size>
+```
+**Required Parameters:**
+- `--model_path`: Path to trained model (e.g., `result_13/DB2_alt_three_vs_alt_five/best_model`)
+- `--test_data_path`: Path to test CSV (e.g., `../data_preprocessing/balanced_binary_datasets/alt_three_vs_alt_five/test.csv`)
+
+**Optional Parameters:**
+- `--output_dir`: Output directory (default: `./test_results`)
+- `--batch_size`: Batch size (default: `32`)
+
+**Example:**
+```bash
+docker run --rm --gpus device=0 \
+  -v $(pwd):/app \
+  -w /app/binary_model_training \
+  aspect-gpu \
+  python3 test_model.py \
+    --model_path result_13/DB2_alt_three_vs_alt_five/best_model \
+    --test_data_path ../data_preprocessing/balanced_binary_datasets/alt_three_vs_alt_five/test.csv \
+    --output_dir ./test_results
+```
+
+**Output:** Generates confusion matrix, ROC curve, classification report, and metrics JSON.
+
+
 
 ### Step 6: Three-Class Model Training
 
@@ -96,7 +132,7 @@ This will:
   **Monitor:** `./run_training_docker.sh logs` | **Status:** `./run_training_docker.sh status` | **Stop:** `./run_training_docker.sh stop`  
   **Results location:** `RESULTS_DIR/DB2_{dataset_name}/` (contains `best_model/`, `model_output/`, `logs/`, and evaluation files)
 
-  #### Testing the Three-Class Model
+  #### Testing Three-Class Model
 
   **From project root** (where `three_class_model_training/` exists):
 ```bash
