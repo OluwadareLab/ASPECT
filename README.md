@@ -169,13 +169,13 @@ python run_all_tests.py /path/to/your/data.csv
 
 #### Configuration
 
-#### 1. Three-Class Model Path
+##### A. Three-Class Model Path
 **File**: `three_class_test.py` (line ~105)
 ```python
 model_path = "../three_class_model_training/result_11/DB2_balanced_three_class_from_multiclass/best_model"
 ```
 
-#### 2. Binary Model Paths
+##### B. Binary Model Paths
 **File**: `binary_class_test.py` (lines ~100-104)
 ```python
 binary_model_overrides = {
@@ -184,13 +184,13 @@ binary_model_overrides = {
     tuple(sorted(["alt_three", "alt_five"])): "../binary_model_training/result_13/DB2_alt_three_vs_alt_five/best_model",
 }
 ```
-#### Output
+##### Output
 
 Results saved in: `./test_result_{dataset_name}_{timestamp}/`
 - `result_three_class/predictions_with_probabilities.csv` - Three-class predictions
 - `result_binary_class/predictions_with_probabilities.csv` - Final hierarchical predictions
 
-####Visualization
+#####Visualization
 
 ```bash
 python plot_cascaded_results.py --input-dir ./test_result_{dataset_name}_{timestamp}
