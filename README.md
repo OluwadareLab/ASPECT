@@ -201,4 +201,22 @@ python plot_cascaded_results.py --input-dir ./test_result_{dataset_name}_{timest
 
 Generates `event_counts_side_by_side.png` comparing three-class vs hierarchical pipeline performance.
 
+## Citation
+
+If you use ASPECT in your research, please cite our repository:
+
+**Zenodo DOI**: [https://doi.org/10.5281/zenodo.15538290](https://doi.org/10.5281/zenodo.15538290tyty)
+
+---
+
+## Contact
+
+For questions, please contact [Sahil Thapa](mailto:sahilthapa@my.unt.edu) or [Prof. Oluwatosin Oluwadare](mailto:Oluwatosin.Oluwadare@unt.edu)
+
+---
+
+## License
+
+MIT License. See `LICENSE` file for details.
+
 
