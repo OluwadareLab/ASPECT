@@ -40,7 +40,6 @@ def run_script(script_name, description, args=None):
         return False
 
 def main():
-    """Main function to run all tests in sequence"""
     if len(sys.argv) > 1:
         dataset_arg = sys.argv[1]
     else:
@@ -55,15 +54,11 @@ def main():
         "balanced_multiclass_dataset": "../data_preprocessing/balanced_multiclass_data/test.csv"
     }
     
-    # Generate timestamp for unique folder name
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    # Check if it's a predefined dataset or a custom path
     if dataset_arg in dataset_names:
-        # Predefined dataset
         dataset = dataset_arg
         test_csv_path = dataset_names[dataset]
-        # Create unique folder with timestamp
         base_output_dir = f"./test_result_{dataset}_{timestamp}"
     else:
         dataset = os.path.basename(dataset_arg).replace('.csv', '').replace('/', '_').replace('\\', '_')
