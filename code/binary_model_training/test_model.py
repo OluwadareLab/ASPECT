@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Test script for binary LoRA classification models.
-Loads trained LoRA models and evaluates them on test data.
-Generates confusion matrix, classification report, and all necessary metrics.
-"""
 
 import os
 import sys
