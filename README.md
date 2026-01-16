@@ -18,7 +18,7 @@ SpliceRead/
 +-- models/               # Placeholder folder to be replaced with pre-trained models
 +-- output/               # Stores generated synthetic sequences and visualization outputs
 +-- code/              # All training, generation, evaluation, and visualization scripts
-¦   +-- training/         # Classifier training logic
+¦   +-- AA_final_two_class_model/         # Classifier training logic
 ¦   +-- data_augmentation/  # Synthetic data generation logic
 +-- Dockerfile            # Containerized environment for reproducibility
 +-- README.md             # Project documentation
@@ -57,6 +57,25 @@ This will:
 - Install PyTorch 2.1.0 with CUDA 12.1 support
 - Install all Python dependencies from `requirements.txt.`
 - Disable Flash Attention to avoid Triton compilation issues
+
+  ### Step 6: Three-Class Model Training
+
+**Start training**: `./run_training_docker.sh start`
+
+**Configure data path**: Edit line 163 in `run_training_docker.sh` → set `DATASET_PATH`
+
+**Configure output directory**: Edit line 27 in `run_training_docker.sh` → set `RESULTS_DIR`
+
+**GPU selection**: `./run_training_docker.sh start -g 1` (default: GPU 0)
+
+**Number of trials**: `./run_training_docker.sh start -t 30` (default: 20)
+
+**Combine options**: `./run_training_docker.sh start -g 1 -t 30`
+
+**Monitor**: `./run_training_docker.sh logs` | **Status**: `./run_training_docker.sh status` | **Stop**: `./run_training_docker.sh stop`
+
+**Results location**: `RESULTS_DIR/DB2_{dataset_name}/` (contains `best_model/`, `model_output/`, `logs/`, and evaluation files)
+
 
 
 
