@@ -12,6 +12,19 @@ ___________________
 ___________________
 
 ## Folder Structure
+```
+SpliceRead/
++-- data/                 # Placeholder folder to be replaced with the downloaded dataset
++-- models/               # Placeholder folder to be replaced with pre-trained models
++-- output/               # Stores generated synthetic sequences and visualization outputs
++-- code/              # All training, generation, evaluation, and visualization scripts
+¦   +-- training/         # Classifier training logic
+¦   +-- data_augmentation/  # Synthetic data generation logic
++-- Dockerfile            # Containerized environment for reproducibility
++-- README.md             # Project documentation
+```
+
+---
 
 
 ### Step 1: Clone Repository
