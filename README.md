@@ -58,7 +58,7 @@ This will:
 - Install all Python dependencies from `requirements.txt.`
 - Disable Flash Attention to avoid Triton compilation issues
 
-  ### Step 6: Three-Class Model Training
+### Step 6: Three-Class Model Training
 
 **Start training**: `./run_training_docker.sh start`
 
