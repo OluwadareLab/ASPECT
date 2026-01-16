@@ -1,6 +1,6 @@
 import os
 import sys
-# Set environment variables BEFORE any other imports to disable Flash Attention
+
 os.environ["USE_FLASH_ATTENTION"] = "0"
 os.environ["DISABLE_FLASH_ATTENTION"] = "1"
 os.environ["USE_FLASH_ATTENTION_2"] = "0"
@@ -8,7 +8,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ["FLASH_ATTENTION_SKIP_CUDA_BUILD"] = "TRUE"
 os.environ["FLASH_ATTENTION_FORCE_DISABLE"] = "TRUE"
 
-# Fix for PyTorch 2.6+ weights_only issue with checkpoint loading
+
 import torch
 _original_torch_load = torch.load
 def _patched_torch_load(*args, **kwargs):
@@ -96,12 +96,12 @@ binary_model_overrides = {
     tuple(sorted(["alt_three", "alt_five"])): "../binary_model_training/result_13/DB2_alt_three_vs_alt_five/best_model",
 }
 
-# Ensemble strategy: optimized_hybrid uses 3-class directly for alt3 vs alt5, weighted ensemble for cassette pairs
+
 ENSEMBLE_STRATEGY = 'optimized_hybrid'
 THREE_CLASS_CONFIDENCE_THRESHOLD = 0.60
 CASSETTE_ENSEMBLE_WEIGHT_3CLASS = 0.30
 
-# Dynamically discover binary models from result directory as fallback
+
 binary_dir = "../result_binary_class"
 all_binary_models = {}
 
@@ -110,7 +110,6 @@ if os.path.exists(binary_dir):
         if model_dir_name.startswith("DB2_") and os.path.isdir(os.path.join(binary_dir, model_dir_name)):
             best_model_path = os.path.join(binary_dir, model_dir_name, "best_model")
             if os.path.exists(best_model_path):
-                # Parse classes from name (format: DB2_class1_vs_class2 or DB2_class1_vs_class2_retry)
                 name = model_dir_name.replace("DB2_", "")
                 if "_vs_" in name:
                     base_name = name.replace("_retry", "")
@@ -128,7 +127,7 @@ if os.path.exists(binary_dir):
                             "is_retry": is_retry
                         })
 
-# Build final binary_models dict, preferring retry versions
+
 binary_models = {}
 for classes_tuple, models in all_binary_models.items():
     if all(cls in ["cassette", "alt_three", "alt_five"] for cls in classes_tuple):
@@ -332,7 +331,6 @@ for classes, model_path in binary_models.items():
             report_csv_path = os.path.join(model_output_dir, "classification_report.csv")
             report_df.to_csv(report_csv_path, index=True)
             
-            # Confusion matrix
             conf_matrix = confusion_matrix(valid_true_labels, valid_preds, labels=list(range(len(classes))))
             plt.figure(figsize=(8, 8))
             sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=classes, yticklabels=classes)
@@ -343,7 +341,6 @@ for classes, model_path in binary_models.items():
             plt.savefig(conf_matrix_path)
             plt.close()
             
-            # ROC-AUC scores
             roc_auc_scores = {}
             for i, class_name in enumerate(classes):
                 try:
