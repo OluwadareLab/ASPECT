@@ -1,12 +1,11 @@
 import os
 import sys
-# Set environment variables BEFORE any other imports to disable Flash Attention
 os.environ["USE_FLASH_ATTENTION"] = "0"
 os.environ["DISABLE_FLASH_ATTENTION"] = "1"
 os.environ["USE_FLASH_ATTENTION_2"] = "0"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# Fix for PyTorch 2.6+ weights_only issue with checkpoint loading
+
 import torch
 _original_torch_load = torch.load
 def _patched_torch_load(*args, **kwargs):
@@ -15,7 +14,7 @@ def _patched_torch_load(*args, **kwargs):
     return _original_torch_load(*args, **kwargs)
 torch.load = _patched_torch_load
 
-# Block flash_attn import by creating a stub module
+
 class FlashAttnStub:
     def __call__(self, *args, **kwargs):
         raise RuntimeError("Flash Attention is disabled.")
@@ -73,13 +72,13 @@ from sklearn.metrics import (
     classification_report,
 )
 
-# LoRA support
+
 from peft import PeftModel
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set device
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 logger.info(f"Using device: {device}")
 
@@ -95,7 +94,6 @@ class SupervisedDataset(Dataset):
     ):
         super(SupervisedDataset, self).__init__()
         
-        # Load data from the disk
         with open(data_path, "r") as f:
             data = list(csv.reader(f))[1:]
         
@@ -103,33 +101,27 @@ class SupervisedDataset(Dataset):
             raise ValueError(f"No data found in {data_path}")
         
         if len(data[0]) == 2:
-            # Data is in the format of [label, text]
             logger.info("Perform single sequence classification...")
             labels_str = [d[0].strip() for d in data]
             texts = [d[1].strip() for d in data]
         elif len(data[0]) == 3:
-            # Data is in the format of [label, text1, text2]
             logger.info("Perform sequence-pair classification...")
             labels_str = [d[0].strip() for d in data]
             texts = [[d[1], d[2]] for d in data]
         else:
             raise ValueError("Data format not supported.")
         
-        # Get unique classes and create label mapping (3 classes)
         unique_classes = sorted(list(set(labels_str)))
         if len(unique_classes) != 3:
             raise ValueError(f"Expected 3 classes, but found {len(unique_classes)}: {unique_classes}")
         
-        # Create label mapping dynamically
         label_mapping = {cls: idx for idx, cls in enumerate(unique_classes)}
-        self.class_names = unique_classes  # Store class names for later use
+        self.class_names = unique_classes  
         self.label_mapping = label_mapping
         
-        # Convert string labels to integers
         labels = [label_mapping[label] for label in labels_str]
 
-        # Use max_length=256 to match training configuration
-        # Training uses model_max_length=256, so we must use the same here
+    
         try:
             tokenizer_max = getattr(tokenizer, 'model_max_length', 256)
             if tokenizer_max is None or tokenizer_max > 10000:
@@ -172,13 +164,12 @@ def load_model_and_tokenizer(model_path: str, base_model_name: str = None):
     """Load trained LoRA model and tokenizer."""
     logger.info(f"Loading model from {model_path}")
     
-    # Check if this is a LoRA adapter (has adapter_config.json)
     adapter_config_path = Path(model_path) / "adapter_config.json"
     is_lora = adapter_config_path.exists()
     
     if is_lora:
         logger.info("Detected LoRA adapter. Loading base model and adapter...")
-        # Load adapter config to get base model name
+    
         with open(adapter_config_path, 'r') as f:
             adapter_config = json.load(f)
         
@@ -188,19 +179,18 @@ def load_model_and_tokenizer(model_path: str, base_model_name: str = None):
         logger.info(f"Base model: {base_model_name}")
         logger.info(f"LoRA adapter: {model_path}")
         
-        # Load tokenizer from base model
         tokenizer = transformers.AutoTokenizer.from_pretrained(
             base_model_name,
             use_fast=True,
             trust_remote_code=True,
-            model_max_length=256,  # Match training configuration
+            model_max_length=256, 
         )
-        tokenizer.model_max_length = 256  # Ensure it's set correctly
+        tokenizer.model_max_length = 256  
         
         # Load base model
         base_model = transformers.AutoModelForSequenceClassification.from_pretrained(
             base_model_name,
-            num_labels=3,  # Three-class classification
+            num_labels=3,  
             trust_remote_code=True,
         )
         
@@ -212,12 +202,12 @@ def load_model_and_tokenizer(model_path: str, base_model_name: str = None):
         if hasattr(base_model.config, '_flash_attn_2_enabled'):
             base_model.config._flash_attn_2_enabled = False
         
-        # Load LoRA adapter
+        
         model = PeftModel.from_pretrained(base_model, model_path)
-        model = model.merge_and_unload()  # Merge adapter into base model for inference
+        model = model.merge_and_unload()  
         logger.info("LoRA adapter merged into base model")
     else:
-        # Regular model (not LoRA)
+        
         logger.info("Loading regular model (not LoRA)...")
         tokenizer = transformers.AutoTokenizer.from_pretrained(
             model_path,
@@ -230,7 +220,6 @@ def load_model_and_tokenizer(model_path: str, base_model_name: str = None):
             trust_remote_code=True,
         )
         
-        # Disable Flash Attention
         if hasattr(model.config, 'use_flash_attention_2'):
             model.config.use_flash_attention_2 = False
         if hasattr(model.config, 'use_flash_attention'):
