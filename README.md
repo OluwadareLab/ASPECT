@@ -1,8 +1,17 @@
-# ASPECT
-## ASPECT: Alternative SPlicing Events Classification with Transformer
+# ASPECT: Alternative SPlicing Events Classification with Transformer
 
 ASPECT is a sequence-based framework for alternative splicing event classification built on DNABERT-2 with Byte Pair Encoding (BPE) tokenization. The model is designed to learn discriminative splicing signals from fixed-length genomic sequences(1,024 bp) and supports both binary event-pair classification and hierarchical multi-class inference.
 
+**Authors:**
+* Sahil Thapa
+* Miguelangel Tamargo
+*  Prof. Oluwatosin Oluwadare
+
+___________________
+#### OluwadareLab, University of North Texas, Denton
+___________________
+
+## Folder Structure
 
 ## Docker Setup
 
