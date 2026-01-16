@@ -164,7 +164,7 @@ A cascaded classification pipeline for alternative splicing event prediction (ca
 ```bash
 docker run --rm --gpus all -v $(pwd):/app -w /app/three_class_pipeline aspect-gpu python run_all_tests.py /path/to/your/data.csv
 ```
-
+#### Local
 ```bash
 # Run full pipeline with custom data
 python run_all_tests.py /path/to/your/data.csv
