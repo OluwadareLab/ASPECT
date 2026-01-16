@@ -13,19 +13,31 @@ ___________________
 
 ## Folder Structure
 
-## Docker Setup
 
-### 1. Build the Docker Image
-
+### Step 1: Clone Repository
 
 ```bash
-# Navigate to the project root directory
-cd /path/to/aspect
-
-# Build the Docker image
-docker build -t aspect-gpu -f dockerfile .
+git clone https://github.com/OluwadareLab/SpliceRead.git
+cd Aspect
 ```
 
+### Step 2: Download Data and Models
+
+Download the Zenodo archive from the link below:
+
+[https://doi.org/10.5281/zenodo.15538290](https://doi.org/10.5281/zenodo.15538290)
+
+### Step 3: Place Files
+
+* Extract the `SpliceRead_Files.zip` archive.
+* Replace the `data/` folder in the repo with the extracted `data/` folder.
+* Replace the `models/` folder in the repo with the extracted `models/` folder.
+
+### Step 4: Build Docker Image
+
+```bash
+docker build -t spliceread .
+```
 This will:
 - Use NVIDIA CUDA 12.4.0 base image
 - Install Python 3.9 and required system packages
