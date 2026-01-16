@@ -20,7 +20,7 @@ SpliceRead/
 +-- code/                 # All training, generation, evaluation
 ¦   +-- AA_final_two_class_model/         # binary-class classification code
 ¦   +-- three_class_model_training/  # multi-class classification code
-+-- Pipeline            # contain 3class to 2class hierarchical pipeline
+¦   +-- Hierarchical ASPECT Pipeline/ # contain 3class to 2class hierarchical pipeline
 +--Dockerfile           # Containerized environment for reproducibility 
 +-- README.md            # Project documentation
 ```
