@@ -70,5 +70,29 @@ This will:
   **Monitor:** `./run_training_docker.sh logs` | **Status:** `./run_training_docker.sh status` | **Stop:** `./run_training_docker.sh stop`  
   **Results location:** `RESULTS_DIR/DB2_{dataset_name}/` (contains `best_model/`, `model_output/`, `logs/`, and evaluation files)
 
+  #### Testing Three-Class Model
+    **From project root** (where `three_class_model_training/` exists):
+       ```bash
+       docker run --gpus device=0 --rm \
+           -v $(pwd):/app \
+           -w /app/three_class_model_training \
+           aspect-gpu \
+           python3 test_model.py \
+               --model_path <path_to_model>/best_model \
+               --test_data_path <path_to_test.csv> \
+               --output_dir ./test_results
+       ```
+       **Example** (from project root):
+        ```bash
+        docker run --gpus device=0 --rm \
+            -v $(pwd):/app \
+            -w /app/three_class_model_training \
+            aspect-gpu \
+            python3 test_model.py \
+                --model_path result_sample_2/DB2_balanced_three_class_from_multiclass/best_model \
+                --test_data_path ../data_preprocessing/balanced_three_class_datasets/cassette_alt_three_alt_five/test.csv \
+                --output_dir ./test_results
+        ```
+
 
 
