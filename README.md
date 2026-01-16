@@ -60,7 +60,7 @@ This will:
 
 ### Step 6: Three-Class Model Training
 
-     **Start training**: `./run_training_docker.sh start`
+     **Start training:** `./run_training_docker.sh start`
      
      **Configure data path**: Edit line 163 in `run_training_docker.sh` → set `DATASET_PATH`
      
