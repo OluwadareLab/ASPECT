@@ -17,11 +17,12 @@ SpliceRead/
 +-- data/                 # Placeholder folder to be replaced with the downloaded dataset
 +-- models/               # Placeholder folder to be replaced with pre-trained models
 +-- output/               # Stores generated synthetic sequences and visualization outputs
-+-- code/              # All training, generation, evaluation, and visualization scripts
-¦   +-- AA_final_two_class_model/         # Classifier training logic
-¦   +-- data_augmentation/  # Synthetic data generation logic
-+-- Dockerfile            # Containerized environment for reproducibility
-+-- README.md             # Project documentation
++-- code/                 # All training, generation, evaluation
+¦   +-- AA_final_two_class_model/         # binary-class classification code
+¦   +-- three_class_model_training/  # multi-class classification code
++-- Pipeline            # contain 3class to 2class hierarchical pipeline
++--Dockerfile           # Containerized environment for reproducibility 
++-- README.md            # Project documentation
 ```
 
 ---
