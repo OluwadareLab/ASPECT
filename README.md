@@ -7,6 +7,8 @@ ASPECT is a sequence-based framework for alternative splicing event classificati
 * Miguelangel Tamargo
 *  Prof. Oluwatosin Oluwadare
 
+[See ASPECT Wiki for Full Documentation on Installation and Usage](https://github.com/OluwadareLab/ASPECT/wiki)
+
 ___________________
 #### OluwadareLab, University of North Texas, Denton
 ___________________
