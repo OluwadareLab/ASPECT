@@ -60,6 +60,28 @@ This will:
 - Disable Flash Attention to avoid Triton compilation issues
 
 ### Step 5: Binary-Class Model Training
+```bash
+./run_training_docker.sh start -d <dataset> -g <gpu_id> -t <num_trials>
+```
+
+**Parameters:**
+- `-d`: Dataset name (`cassette_vs_alt_three`, `cassette_vs_alt_five`, `alt_three_vs_alt_five`, `constitutive_vs_cassette`, `constitutive_vs_alt_three`, `constitutive_vs_alt_five`)
+- `-g`: GPU ID (e.g., `0` or `1`)
+- `-t`: Number of Optuna trials (e.g., `20`)
+
+**Configuration:**
+- **Data Path**: Edit `DATASET_PATH` on line 187 in `run_training_docker.sh` (default: `/app/data_preprocessing/balanced_binary_datasets/${DATASET}`)
+- **Output Directory**: Edit `RESULTS_DIR` on line 26 in `run_training_docker.sh` (default: `/app/binary_model_training/result_mn`)
+
+**Example:**
+```bash
+./run_training_docker.sh start -d cassette_vs_alt_three -g 0 -t 20
+```
+
+**View logs:** `./run_training_docker.sh logs`  
+**Check status:** `./run_training_docker.sh status`  
+**Stop training:** `./run_training_docker.sh stop`
+
 
 
 ### Step 6: Three-Class Model Training
