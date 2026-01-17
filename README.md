@@ -41,7 +41,7 @@ cd ASPECT
 
 Download the Zenodo archive from the link below:
 
-[https://doi.org/10.5281/zenodo.15538290](https://doi.org/10.5281/zenodo.1553tyty82)
+[https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.18283327)
 
 ### Step 3: Place Files
 
@@ -207,7 +207,7 @@ Generates `event_counts_side_by_side.png` comparing three-class vs hierarchical 
 
 If you use ASPECT in your research, please cite our repository:
 
-**Zenodo DOI**: [https://doi.org/10.5281/zenodo.15538290](https://doi.org/10.5281/zenodo.15538290tyty)
+**Zenodo DOI**: [https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.18283327)
 
 ---
 
