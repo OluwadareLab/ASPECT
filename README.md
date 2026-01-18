@@ -12,7 +12,9 @@ ASPECT is a sequence-based framework for alternative splicing event classificati
 ___________________
 #### OluwadareLab, University of North Texas, Denton
 ___________________
-
+## Data and Model Availability
+All datasets generated and analyzed during this study, as well as the trained models, are publicly available on Zenodo at:
+[https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.18283327)
 ## Folder Structure
 ```
 SpliceRead/
