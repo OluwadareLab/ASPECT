@@ -27,14 +27,14 @@ SpliceRead/
 ¦   +-- Hierarchical ASPECT Pipeline/
 ¦   ├── data_preparation/
 │   └── build_cascade_datasets.py
-├── training/
-│   ├── train_classifier.py
-│   └── train_all_cascade_models.sh
-├── inference/
-│   ├── hierarchical_cascade.py
-│   └── evaluate_predictions.py
-├── examples/
-│   └── example_input.csv
+    ├── training/
+    │   ├── train_classifier.py
+    │   └── train_all_cascade_models.sh
+    ├── inference/
+    │   ├── hierarchical_cascade.py
+    │   └── evaluate_predictions.py
+    ├── examples/
+    │   └── example_input.csv
 
 +--Dockerfile           # Containerized environment for reproducibility 
 +-- README.md            # Project documentation
