@@ -18,11 +18,24 @@ All datasets generated and analyzed during this study, as well as the trained mo
 ```
 SpliceRead/
 +-- data/                 # Placeholder folder to be replaced with the downloaded dataset
+├── cancer_derived_data/          
+├── cancer_models/  
 +-- models/               # Placeholder folder to be replaced with pre-trained models
 +-- output/               # Stores generated synthetic sequences and visualization outputs
 +-- code/                 # All training, generation, evaluation
 ¦   +-- AA_final_two_class_model/         # binary-class classification code
-¦   +-- Hierarchical ASPECT Pipeline/ 
+¦   +-- Hierarchical ASPECT Pipeline/
+¦   ├── data_preparation/
+│   └── build_cascade_datasets.py
+├── training/
+│   ├── train_classifier.py
+│   └── train_all_cascade_models.sh
+├── inference/
+│   ├── hierarchical_cascade.py
+│   └── evaluate_predictions.py
+├── examples/
+│   └── example_input.csv
+
 +--Dockerfile           # Containerized environment for reproducibility 
 +-- README.md            # Project documentation
 ```
@@ -94,9 +107,8 @@ A cascaded classification pipeline for alternative splicing event prediction (ca
 
 ```text
 Hierarchical_ASPECT_Pipeline/
-├── cancer_derived_data/          # Place Zenodo cancer_derived_data here
-├── cancer_models/                # Place Zenodo cancer_models here
-├── results/                      # Inference and evaluation outputs
+├── cancer_derived_data/          
+├── cancer_models/               
 ├── data_preparation/
 │   └── build_cascade_datasets.py
 ├── training/
