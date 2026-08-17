@@ -104,6 +104,8 @@ This will:
 
 ### Step 5: Hierarchical ASPECT Pipeline
 A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five, Mutually Exclusive exons and retained introns).
+<img width="8732" height="3000" alt="Figure_4" src="https://github.com/user-attachments/assets/9124990c-1f3b-432a-8451-e9f9f4edd3a0" />
+
 
 After placing the Zenodo folders:
 
