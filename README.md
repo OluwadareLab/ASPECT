@@ -25,8 +25,8 @@ SpliceRead/
 +-- code/                 # All training, generation, evaluation
 ¦   +-- AA_final_two_class_model/         # binary-class classification code
 ¦   +-- Hierarchical ASPECT Pipeline/
-    ¦   ├── data_preparation/
-    │   └── build_cascade_datasets.py
+        ├── data_preparation/
+        └── build_cascade_datasets.py
         ├── training/
         │   ├── train_classifier.py
         │   └── train_all_cascade_models.sh
@@ -102,28 +102,6 @@ This will:
 
 ### Step 5: Hierarchical ASPECT Pipeline
 A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five, Mutually Exclusive exons and retained introns).
-
-## Folder Structure
-
-```text
-Hierarchical_ASPECT_Pipeline/
-├── cancer_derived_data/          
-├── cancer_models/               
-├── data_preparation/
-│   └── build_cascade_datasets.py
-├── training/
-│   ├── train_classifier.py
-│   └── train_all_cascade_models.sh
-├── inference/
-│   ├── hierarchical_cascade.py
-│   └── evaluate_predictions.py
-├── examples/
-│   └── example_input.csv
-├── Dockerfile
-├── requirements.txt
-├── LICENSE
-└── README.md
-```
 
 After placing the Zenodo folders:
 
