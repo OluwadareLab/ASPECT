@@ -88,48 +88,213 @@ This will:
 
 
 ### Step 5: Hierarchical ASPECT Pipeline
-A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five).
+A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five, Mutually Exclusive exons and retained introns).
 
-#### Docker
+## Folder Structure
+
+```text
+Hierarchical_ASPECT_Pipeline/
+├── cancer_derived_data/          # Place Zenodo cancer_derived_data here
+├── cancer_models/                # Place Zenodo cancer_models here
+├── results/                      # Inference and evaluation outputs
+├── data_preparation/
+│   └── build_cascade_datasets.py
+├── training/
+│   ├── train_classifier.py
+│   └── train_all_cascade_models.sh
+├── inference/
+│   ├── hierarchical_cascade.py
+│   └── evaluate_predictions.py
+├── examples/
+│   └── example_input.csv
+├── Dockerfile
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+After placing the Zenodo folders:
+
+```text
+cancer_derived_data/
+├── multi_class_datasets/{train,val,test}.csv
+├── four_class_datasets/<A_vs_B_vs_C_vs_D>/{train,val,test}.csv
+├── three_class_datasets/<A_vs_B_vs_C>/{train,val,test}.csv
+└── binary_datsets/<A_vs_B>/{train,val,test}.csv
+
+cancer_models/
+├── multi_class_datasets/DB2_multi_class_datasets/best_model/
+├── four_class_datasets/DB2_<labels>/best_model/
+├── three_class_datasets/DB2_<labels>/best_model/
+└── binary_datsets/DB2_<labels>/best_model/
+```
+
+### Step 6: Build Cascade Datasets (optional)
+
+Required only if you are rebuilding splits from processed event CSVs.
+Zenodo users can skip this step.
+
 ```bash
-docker run --rm --gpus all -v $(pwd):/app -w /app/three_class_pipeline aspect-gpu python run_all_tests.py /path/to/your/data.csv
-```
-#### Local
-```bash
-# Run full pipeline with custom data
-python run_all_tests.py /path/to/your/data.csv
-```
-
-#### Configuration
-
-##### A. Three-Class Model Path
-**File**: `three_class_test.py` (line ~105)
-```python
-model_path = "../three_class_model_training/result_11/DB2_balanced_three_class_from_multiclass/best_model"
+docker run --rm \
+  -v $(pwd):/app \
+  -v /path/to/processed_event_csvs:/raw:ro \
+  -w /app \
+  aspect-gpu \
+  python data_preparation/build_cascade_datasets.py \
+    --processed-dir /raw \
+    --output-dir cancer_derived_data \
+    --seed 42
 ```
 
-##### B. Binary Model Paths
-**File**: `binary_class_test.py` (lines ~100-104)
-```python
-binary_model_overrides = {
-    tuple(sorted(["cassette", "alt_three"])): "../binary_model_training/result_8/DB2_cassette_vs_alt_three/best_model",
-    tuple(sorted(["cassette", "alt_five"])): "../binary_model_training/result_8/DB2_cassette_vs_alt_five/best_model",
-    tuple(sorted(["alt_three", "alt_five"])): "../binary_model_training/result_13/DB2_alt_three_vs_alt_five/best_model",
-}
-```
-##### Output
+---
 
-Results saved in: `./test_result_{dataset_name}_{timestamp}/`
-- `result_three_class/predictions_with_probabilities.csv` - Three-class predictions
-- `result_binary_class/predictions_with_probabilities.csv` - Final hierarchical predictions
+### Step 7: Train Hierarchical Cascade Models
 
-##### Visualization
+Trains the full model set for all five events:
+
+1. root **5-class** model
+2. all **4-class** subset models
+3. all **3-class** subset models
+4. all **2-class (binary)** subset models
 
 ```bash
-python plot_cascaded_results.py --input-dir ./test_result_{dataset_name}_{timestamp}
+docker run --rm --gpus all \
+  -v $(pwd):/app \
+  -w /app \
+  -e DATA_DIR=/app/cancer_derived_data \
+  -e MODELS_DIR=/app/cancer_models \
+  -e USE_OPTUNA=True \
+  -e OPTUNA_TRIALS=15 \
+  -e USE_CLASS_WEIGHTS=True \
+  -e OPTUNA_TARGET_METRIC=auto \
+  -e MODEL_MAX_LENGTH=256 \
+  -e TRAIN_BS=32 \
+  -e EVAL_BS=32 \
+  -e USE_WANDB=False \
+  aspect-gpu \
+  bash training/train_all_cascade_models.sh
 ```
 
-Generates `event_counts_side_by_side.png` comparing three-class vs hierarchical pipeline performance.
+**Example (GPU 0, 20 Optuna trials):**
+
+```bash
+docker run --rm --gpus '"device=0"' \
+  -v $(pwd):/app \
+  -w /app \
+  -e DATA_DIR=/app/cancer_derived_data \
+  -e MODELS_DIR=/app/cancer_models \
+  -e OPTUNA_TRIALS=20 \
+  -e USE_CLASS_WEIGHTS=True \
+  -e USE_WANDB=False \
+  aspect-gpu \
+  bash training/train_all_cascade_models.sh
+```
+
+**Train one model only:**
+
+```bash
+docker run --rm --gpus all \
+  -v $(pwd):/app \
+  -w /app \
+  -e RESULTS_DIR=/app/cancer_models/multi_class_datasets \
+  aspect-gpu \
+  python training/train_classifier.py \
+    --data_path /app/cancer_derived_data/multi_class_datasets \
+    --use_optuna True \
+    --optuna_trials 15 \
+    --use_class_weights True \
+    --model_max_length 256 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
+    --use_wandb False
+```
+
+Checkpoints are written under `cancer_models/`. Existing `best_model/` directories are skipped.
+
+---
+
+### Step 7: Hierarchical Inference
+
+Input CSV columns:
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `sequence` | yes | DNA sequence |
+| `splice_type` | no | Ground truth (`AA/AD/ES/ME/RI`) for metrics |
+
+**Internal test split (using Zenodo data + models):**
+
+```bash
+docker run --rm --gpus all \
+  -v $(pwd):/app \
+  -w /app \
+  aspect-gpu \
+  python inference/hierarchical_cascade.py \
+    --input-csv /app/cancer_derived_data/multi_class_datasets/test.csv \
+    --models-root /app/cancer_models \
+    --training-runs-retrain none \
+    --out-dir /app/results/internal_test \
+    --write-metrics \
+    --device cuda
+```
+
+**Holdout / custom CSV:**
+
+```bash
+docker run --rm --gpus all \
+  -v $(pwd):/app \
+  -w /app \
+  aspect-gpu \
+  python inference/hierarchical_cascade.py \
+    --input-csv /app/cancer_derived_data/holdout_BRCA.csv \
+    --models-root /app/cancer_models \
+    --training-runs-retrain none \
+    --out-dir /app/results/holdout_BRCA \
+    --write-metrics \
+    --device cuda
+```
+
+**Default thresholds:**
+
+| Stage | Probability (`τ`) | Normalized entropy (`η`) |
+|-------|-------------------|--------------------------|
+| 5-class | 0.90 | 0.10 |
+| 4-class | 0.90 | 0.18 |
+| 3-class | 0.86 | 0.16 |
+| 2-class | 0.78 | 0.14 |
+
+Shared margin (`δ`): **0.65**
+
+**Output:**
+
+```text
+results/<run>/
+├── hierarchical_predictions.csv
+├── hierarchical_predictions.jsonl
+├── summary.json
+├── metrics_summary.json
+├── classification_report_stage5.csv
+├── classification_report_final.csv
+├── confusion_matrix_stage5.png
+└── confusion_matrix_final.png
+```
+
+---
+
+### Step 8: Evaluate Predictions
+
+```bash
+docker run --rm \
+  -v $(pwd):/app \
+  -w /app \
+  aspect-gpu \
+  python inference/evaluate_predictions.py \
+    --run-dir /app/results/internal_test
+```
+
+---
+
+
 
 ## Citation
 
