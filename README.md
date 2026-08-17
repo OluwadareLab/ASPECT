@@ -1,4 +1,6 @@
 # ASPECT: Alternative Splicing Event Classification with Transformers for Cancer Transcriptomics
+<img width="3924" height="2088" alt="Figure_3" src="https://github.com/user-attachments/assets/8a732a56-da85-4949-8ae8-1dd29157baba" />
+
 ASPECT is a sequence-based framework for alternative splicing event classification built on DNABERT-2 with Byte Pair Encoding (BPE) tokenization. The model is designed to learn discriminative splicing signals from fixed-length genomic sequences(1,024 bp) and supports both binary event-pair classification and hierarchical multi-class inference.
 
 **Authors:**
