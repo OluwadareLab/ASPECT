@@ -22,8 +22,7 @@ SpliceRead/
 +-- output/               # Stores generated synthetic sequences and visualization outputs
 +-- code/                 # All training, generation, evaluation
 ¦   +-- AA_final_two_class_model/         # binary-class classification code
-¦   +-- three_class_model_training/  # multi-class classification code
-¦   +-- Hierarchical ASPECT Pipeline/ # contain 3class to 2class hierarchical pipeline
+¦   +-- Hierarchical ASPECT Pipeline/ 
 +--Dockerfile           # Containerized environment for reproducibility 
 +-- README.md            # Project documentation
 ```
@@ -87,80 +86,8 @@ This will:
 **Stop training:** `./run_training_docker.sh stop`
 
 
-#### Testing Three-Class Model
-**From project root** (where `binary_model_training/` exists):
-```bash
-docker run --rm --gpus device=<gpu_id> \
-  -v $(pwd):/app \
-  -w /app/binary_model_training \
-  aspect-gpu \
-  python3 test_model.py \
-    --model_path <model_path> \
-    --test_data_path <test_data_path> \
-    --output_dir <output_dir> \
-    --batch_size <batch_size>
-```
-**Required Parameters:**
-- `--model_path`: Path to trained model (e.g., `result_13/DB2_alt_three_vs_alt_five/best_model`)
-- `--test_data_path`: Path to test CSV (e.g., `../data_preprocessing/balanced_binary_datasets/alt_three_vs_alt_five/test.csv`)
 
-**Optional Parameters:**
-- `--output_dir`: Output directory (default: `./test_results`)
-- `--batch_size`: Batch size (default: `32`)
-
-**Example:**
-```bash
-docker run --rm --gpus device=0 \
-  -v $(pwd):/app \
-  -w /app/binary_model_training \
-  aspect-gpu \
-  python3 test_model.py \
-    --model_path result_13/DB2_alt_three_vs_alt_five/best_model \
-    --test_data_path ../data_preprocessing/balanced_binary_datasets/alt_three_vs_alt_five/test.csv \
-    --output_dir ./test_results
-```
-
-**Output:** Generates confusion matrix, ROC curve, classification report, and metrics JSON.
-
-
-
-### Step 6: Three-Class Model Training
-
-  **Start training:** `./run_training_docker.sh start`  
-  **Configure data path:** Edit line **163** in `run_training_docker.sh` → set `DATASET_PATH`  
-  **Configure output directory:** Edit line **27** in `run_training_docker.sh` → set `RESULTS_DIR`  
-  **GPU selection:** `./run_training_docker.sh start -g 1` (default: GPU 0)  
-  **Number of trials:** `./run_training_docker.sh start -t 30` (default: 20)  
-  **Combine options:** `./run_training_docker.sh start -g 1 -t 30`  
-  **Monitor:** `./run_training_docker.sh logs` | **Status:** `./run_training_docker.sh status` | **Stop:** `./run_training_docker.sh stop`  
-  **Results location:** `RESULTS_DIR/DB2_{dataset_name}/` (contains `best_model/`, `model_output/`, `logs/`, and evaluation files)
-
-  #### Testing Three-Class Model
-
-  **From project root** (where `three_class_model_training/` exists):
-```bash
-docker run --gpus device=0 --rm \
-    -v $(pwd):/app \
-    -w /app/three_class_model_training \
-    aspect-gpu \
-    python3 test_model.py \
-        --model_path <path_to_model>/best_model \
-        --test_data_path <path_to_test.csv> \
-        --output_dir ./test_results
-```
-**Example** (from project root):
-```bash
-docker run --gpus device=0 --rm \
-    -v $(pwd):/app \
-    -w /app/three_class_model_training \
-    aspect-gpu \
-    python3 test_model.py \
-        --model_path result_sample_2/DB2_balanced_three_class_from_multiclass/best_model \
-        --test_data_path ../data_preprocessing/balanced_three_class_datasets/cassette_alt_three_alt_five/test.csv \
-        --output_dir ./test_results
-```
-
-### Step 7: Hierarchical ASPECT Pipeline
+### Step 5: Hierarchical ASPECT Pipeline
 A cascaded classification pipeline for alternative splicing event prediction (cassette, alt_three, alt_five).
 
 #### Docker
