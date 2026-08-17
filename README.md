@@ -15,7 +15,7 @@ ___________________
 ___________________
 ## Data and Model Availability
 All datasets generated and analyzed during this study, as well as the trained models, are publicly available on Zenodo at:
-[https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.18283327)
+[https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.21981327)
 ## Folder Structure
 ```
 SpliceRead/
@@ -56,7 +56,7 @@ cd ASPECT
 
 Download the Zenodo archive from the link below:
 
-[https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.18283327)
+[https://doi.org/10.5281/zenodo.18283327](https://doi.org/10.5281/zenodo.21981327)
 
 ### Step 3: Place Files
 
